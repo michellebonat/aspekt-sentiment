@@ -1,4 +1,4 @@
-# Aspekt-sentiment [![Build Status](https://travis-ci.org/IllegalCactus/aspekt-sentiment.svg?branch=master)](https://travis-ci.org/IllegalCactus/aspekt-sentiment)
+# Aspekt-sentiment [![Gem Version](https://badge.fury.io/rb/aspekt-sentiment.svg)](http://badge.fury.io/rb/aspekt-sentiment) [![Build Status](https://travis-ci.org/IllegalCactus/aspekt-sentiment.svg?branch=master)](https://travis-ci.org/IllegalCactus/aspekt-sentiment)
 
 A gem that provides simple aspect-level sentiment analysis, using a dictionary and list of keywords.
 
