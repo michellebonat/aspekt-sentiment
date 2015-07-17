@@ -8,6 +8,6 @@ require "irb"
 # with your gem easier. You can also use a different console, if you like.
 
 analyzer = Aspekt.new
-text = "The story was bad."
+text = "The story was awful. The visual effects and graphics however were great. The plot was boring."
 require "pry"
 binding.pry

@@ -1,5 +1,3 @@
-require 'yaml'
-
 module Utils
   def Utils.get_indexes(sentence, key)
     indexes = []

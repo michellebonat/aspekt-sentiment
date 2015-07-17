@@ -5,7 +5,8 @@ describe Aspekt do
 
  before(:each) do
     @analyzer = Aspekt::Analyzer.new
-    @result = @analyzer.score("The sound effects were terrible!")
+    @text = "The story was awful! The visual effects and graphics however were great. The plot was boring."
+    @result = @analyzer.score(@text)
   end
 
   it 'has a version number' do
@@ -18,13 +19,11 @@ describe Aspekt do
   end
 
   it 'analyzes some text and returns tagged sentences' do
-    expect(@result.length).to eq(1)
+    expect(@result.length).to eq(3)
     expect(@result[0]).not_to be nil
   end
 
   it 'assigns sentiment appropriately' do
-
-    expect(@result.length).to eq(1)
     expect(@result[0][:sentiment]).to be < 0
   end
 
@@ -38,6 +37,10 @@ describe Aspekt do
 
   it 'retrieves an aspect value correclty' do
     expect(@analyzer.lookup_aspect_value('color')).to eq({aspect: :vision, confidence: 90})
+  end
+
+  it 'finds context indices correctly' do
+    expect(@result[0][:context_indices][:plot][:indices]).to eq([4])
   end
 
   it 'loads custom aspect keywords' do

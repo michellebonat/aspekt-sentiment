@@ -23,6 +23,7 @@ module Aspekt
 
         sentence[:sentiment] = evaluate_sentence(clean_text)
         sentence[:context_tags] = tag_sentence(clean_text)
+        sentence[:context_indices] = context_indices(clean_text)
         sentence[:emphasis] = count_emphasis(sentence[:text])
 
         scored_sentences << sentence
@@ -58,6 +59,20 @@ module Aspekt
 
       sentence_tags.map { |k, v| sentence_tags[k] = v.reduce(:+) / sentence_tags.size }
       return sentence_tags
+    end
+
+    def context_indices(sentence)
+      indices = Hash.new{}
+
+      @aspect_keywords.each do |context, terms|
+        terms.keys.each do |term|
+          if sentence.match(/(\W|\A)#{term}(\W|\z)/)
+            indices[context] = {term: term, indices: Utils::get_indexes(sentence, term)}
+          end
+        end
+      end
+
+      return indices
     end
 
     def count_emphasis(sentence)
