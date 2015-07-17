@@ -28,31 +28,61 @@ bad: -1
 and a list of keywords:
 
 ```yml
-visuals:
-  cinematography: 80
-  effects: 70
+vision:
+  graphics: 100
+
+editing:
+  effects: 35
 
 plot:
-  story: 90
+  story: 100
   dialogue: 60
 ```
 
 You can use Aspekt to analyze some text:
 
 ```ruby
+require 'aspekt-sentiment'
 analyzer = Aspekt.new
 
 # Check the sentiment value for a word.
 analyzer.lookup_sentiment_value("bad")
-=> -1
+#=> -1
 
 # Check what aspect a word matches, and with what confidence.
-analyzer.lookup_aspect_value("color")
-=> {:aspect=>:vision, :confidence=>90}
+analyzer.lookup_aspect_value("graphics")
+#=> {:aspect=>:vision, :confidence=>80}
 
 # Analyze a text.
-analyzer.score("The story was bad.")
-=> [{:text=>"The story was bad!", :sentiment=>-1, :context_tags=>{:plot=>100}, :emphasis=>1.0}]
+analyzer.score("The story was awful. The visual effects and graphics however were great. The plot was boring.")
+#=> [{:text=>"The story was awful.",
+#		:sentiment=>-2,
+#		:context_tags=>{:plot=>100},
+#		:emphasis=>0.0,
+#		:context_indices=>{
+#			:plot=> {:term=>"story", :indices=>[4]}
+#		}
+#	},
+#	{:text=>"The visual effects and graphics however were great.",
+#		:sentiment=>2,
+#		:context_tags=>{:editing=>35, :vision=>100},
+#		:emphasis=>0.0,
+#		:context_indices=>
+#		{
+#			:editing=>{:term=>"effects", :indices=>[11]},
+#			:vision=>{:term=>"graphics", :indices=>[10]}
+#		}
+#	},
+#	{:text=>"The plot was boring.",
+#		:sentiment=>-2,
+#		:context_tags=>{:plot=>50, :length=>25},
+#		:emphasis=>0.0,
+#		:context_indices=>
+#		{
+#			:plot=>{:term=>"plot", :indices=>[4]},
+#			:length=>{:term=>"boring", :indices=>[9]}
+#		}
+#	}]
 ```
 
 ### Adding custom dictionaries/keywords
@@ -78,7 +108,5 @@ analyzer.score("Lorem Ipsum...")
 ## Todo
 
 * Provide support for additional dictionary/aspect file formats.
-
-* Add indexes of mentioned aspects to the `sentence` object.
 
 * Port over the 'people' modules from [Rescore](https://github.com/charlieegan3/rescore).
