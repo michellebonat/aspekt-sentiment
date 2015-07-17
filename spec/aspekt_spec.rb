@@ -9,10 +9,6 @@ describe Aspekt do
     @result = @analyzer.score(@text)
   end
 
-  it 'has a version number' do
-    expect(Aspekt::VERSION).not_to be nil
-  end
-
   it 'initializes the dictionary and aspect keywords' do
     expect(@analyzer.dictionary).not_to be nil
     expect(@analyzer.aspect_keywords).not_to be nil
@@ -35,7 +31,7 @@ describe Aspekt do
     expect(@analyzer.lookup_sentiment_value('bad')).to eq(-2)
   end
 
-  it 'retrieves an aspect value correclty' do
+  it 'retrieves an aspect value correctly' do
     expect(@analyzer.lookup_aspect_value('color')).to eq({aspect: :vision, confidence: 90})
   end
 
@@ -59,7 +55,7 @@ describe Aspekt do
     dict.close
     @analyzer.load_dictionary(dict.path)
 
-    expect(@analyzer.dictionary["good"]).not_to be nil
+    expect(@analyzer.dictionary["good"]).to eq(1)
     dict.unlink
   end
 
