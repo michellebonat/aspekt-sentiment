@@ -5,7 +5,8 @@ describe Aspekt do
 
  before(:each) do
     @analyzer = Aspekt::Analyzer.new
-    @text = "The story was awful! The visual effects and graphics however were great. The plot was boring."
+    @analyzer.people << "John Smith"
+    @text = "The story was awful! The visual effects and graphics however were great. The plot was boring. The director John Smith did an excellent job."
     @result = @analyzer.score(@text)
   end
 
@@ -15,7 +16,7 @@ describe Aspekt do
   end
 
   it 'analyzes some text and returns tagged sentences' do
-    expect(@result.length).to eq(3)
+    expect(@result.length).to eq(4)
     expect(@result[0]).not_to be nil
   end
 
@@ -37,6 +38,11 @@ describe Aspekt do
 
   it 'finds context indices correctly' do
     expect(@result[0][:context_indices][:plot][:indices]).to eq([4])
+  end
+
+  it 'tags relevant people' do
+    expect(@result[3][:people_tags]).to eq(["John Smith"])
+    expect(@result[3][:people_indices]).to eq({"John Smith"=>[13]})
   end
 
   it 'loads custom aspect keywords' do

@@ -6,11 +6,13 @@ require 'yaml'
 
 module Aspekt
   class Analyzer
-    attr_accessor :dictionary, :aspect_keywords
+    attr_accessor :dictionary, :aspect_keywords, :people
 
     def initialize
       @dictionary = Dictionary::DICTIONARY.clone
       @aspect_keywords = Aspects::ASPECTS.clone
+      @people = []
+      @prev_name = nil
     end
 
     def score(text)
@@ -24,6 +26,7 @@ module Aspekt
         sentence[:sentiment] = evaluate_sentence(clean_text)
         sentence[:context_tags] = tag_sentence(clean_text)
         sentence[:context_indices] = context_indices(clean_text)
+        sentence[:people_tags], sentence[:people_indices] = tag_people(sentence[:text])
         sentence[:emphasis] = count_emphasis(sentence[:text])
 
         scored_sentences << sentence
@@ -73,6 +76,34 @@ module Aspekt
       end
 
       return indices
+    end
+
+    def tag_people(sentence)
+      mentioned_people = [] # The names detected in this sentence.
+      people_indexes = Hash.new([]) # where in the sentence the person is mentioned.
+
+      # Tag people in sentence.
+      @people.each do |person|
+        if sentence.include?(person)
+          people_indexes[person] = Utils.get_indexes(sentence.dup, person)
+          mentioned_people.push(person)
+        end
+      end
+
+      # Check for mentions using pronouns.
+      if mentioned_people.empty? && @prev_name != nil
+        pronouns = ['he', 'him', 'his', 'she', 'her']
+          sentence.downcase.gsub(/\W/, ' ').split(/\s+/).each do |word|
+            if pronouns.include?(word)
+              mentioned_people.push(@prev_name)
+              break
+            end
+          end
+      else # If there were people mentioned, update the previous name.
+        @prev_name = mentioned_people.last
+      end
+
+      return mentioned_people.uniq, people_indexes
     end
 
     def count_emphasis(sentence)

@@ -54,7 +54,7 @@ analyzer.lookup_aspect_value("graphics")
 #=> {:aspect=>:vision, :confidence=>80}
 
 # Analyze a text.
-analyzer.score("The story was awful. The visual effects and graphics however were great. The plot was boring.")
+analyzer.score("The story was awful. The visual effects and graphics however were great. The plot was boring. The director John Smith did an excellent job.")
 #=> [{:text=>"The story was awful.",
 #		:sentiment=>-2,
 #		:context_tags=>{:plot=>100},
@@ -82,18 +82,29 @@ analyzer.score("The story was awful. The visual effects and graphics however wer
 #			:plot=>{:term=>"plot", :indices=>[4]},
 #			:length=>{:term=>"boring", :indices=>[9]}
 #		}
+#	{:text=>"The director John Smith did an excellent job.",
+#		:sentiment=>2,
+#	 	:context_tags=>{:cinematography=>80},
+#	 	:emphasis=>0.0,
+#	 	:context_indices=>
+#	  	{
+#	  		:cinematography=>{:term=>"director", :indices=>[4]}
+#	  	},
+#	 	:people_tags=>["John Smith"],
+#	 	:people_indices=>{"John Smith"=>[13]}}
 #	}]
 ```
 
-### Adding custom dictionaries/keywords
+### Adding custom dictionaries/keywords/people
 
 **Aspekt-sentiment** currently only supports YAML for the dictionary and aspect keywords files.
 
 ```ruby
 analyzer.load_dictionary('my_dict.yml') # load a custom dictionary.
 analyzer.load_aspect_keywords('my_keywords.yml') # load custom aspect keywords.
+analyzer.people << "John Smith" # or analyzer.people += ["John Smith", "John Doe"]
 
-# The analyzer object is now using your custom keywords and dictionary for the scoring.
+# The analyzer object is now using your custom data for the scoring.
 analyzer.score("Lorem Ipsum...")
 ```
 
